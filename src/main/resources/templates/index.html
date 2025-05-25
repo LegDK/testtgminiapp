@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Telegram Mini App</title>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: var(--tg-theme-bg-color, #ffffff);
+            color: var(--tg-theme-text-color, #000000);
+        }
+        .user-info {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 8px;
+            background-color: var(--tg-theme-secondary-bg-color, #f0f0f0);
+        }
+        .user-info p {
+            margin: 5px 0;
+        }
+        .error {
+            color: red;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 4px;
+            background-color: #ffebee;
+        }
+    </style>
+</head>
+<body>
+    <div id="userInfo" class="user-info">
+        <h2>Информация о пользователе</h2>
+        <p>Имя: <span id="firstName"></span></p>
+        <p>Фамилия: <span id="lastName"></span></p>
+        <p>Username: <span id="username"></span></p>
+    </div>
+
+    <script>
+        const tg = window.Telegram.WebApp;
+        tg.expand();
+
+        const user = tg.initDataUnsafe.user;
+        
+        fetch('/init', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(user)
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.status === 'success') {
+                document.getElementById('firstName').textContent = data.user.first_name || 'Не указано';
+                document.getElementById('lastName').textContent = data.user.last_name || 'Не указано';
+                document.getElementById('username').textContent = data.user.username || 'Не указано';
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            const userInfo = document.getElementById('userInfo');
+            userInfo.innerHTML = '<div class="error">Ошибка при загрузке данных пользователя</div>';
+        });
+
+        tg.BackButton.onClick(() => {
+            tg.close();
+        });
+        tg.BackButton.show();
+    </script>
+</body>
+</html>
