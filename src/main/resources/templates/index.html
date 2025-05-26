@@ -32,6 +32,7 @@
 <body>
     <div id="userInfo" class="user-info">
         <h2>Информация о пользователе</h2>
+        <p>ID: <span id="tgUserId"></span></p>
         <p>Имя: <span id="firstName"></span></p>
         <p>Фамилия: <span id="lastName"></span></p>
         <p>Username: <span id="username"></span></p>
@@ -53,6 +54,7 @@
         .then(response => response.json())
         .then(data => {
             if (data.status === 'success') {
+                document.getElementById('tgUserId').textContent = data.user.id || 'Не указано';
                 document.getElementById('firstName').textContent = data.user.first_name || 'Не указано';
                 document.getElementById('lastName').textContent = data.user.last_name || 'Не указано';
                 document.getElementById('username').textContent = data.user.username || 'Не указано';
