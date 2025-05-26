@@ -21,6 +21,7 @@ public class TelegramController {
         return Map.of(
             "status", "success",
             "user", Map.of(
+                    "id", data.get("id"),
                 "first_name", data.get("first_name"),
                 "last_name", data.get("last_name"),
                 "username", data.get("username")
